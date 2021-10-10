@@ -3,18 +3,28 @@ package com.zbm.kata.bank.domain;
 import com.zbm.kata.bank.service.StatementPrintingService;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.zbm.kata.bank.domain.OperationType.WITHDRAW;
 
 public class Account {
 
     private BigDecimal balance;
+    private StatementPrintingService statementPrintingService;
+    private List<Operation> operations;
 
     public Account(StatementPrintingService statementPrintingService) {
         balance = BigDecimal.ZERO;
+        operations = new ArrayList<>();
+        this.statementPrintingService = statementPrintingService;
     }
 
     public void deposit(BigDecimal amount) {
         checkThatAmountIsGreaterThanZero(amount);
         balance = balance.add(amount);
+        operations.add(new Operation(LocalDateTime.now(), amount, WITHDRAW, balance));
     }
 
     public void withdraw(BigDecimal amount) {
@@ -23,6 +33,7 @@ public class Account {
             throw new IllegalArgumentException("Insufficient funds.");
         }
         balance = balance.subtract(amount);
+        operations.add(new Operation(LocalDateTime.now(), amount, WITHDRAW, balance));
     }
 
     public BigDecimal getTotalBalance() {
@@ -36,6 +47,6 @@ public class Account {
     }
 
     public void printStatement() {
-
+        statementPrintingService.print(operations);
     }
 }
