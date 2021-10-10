@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.zbm.kata.bank.domain.OperationType.DEPOSIT;
 import static com.zbm.kata.bank.domain.OperationType.WITHDRAW;
 
 public class Account {
@@ -24,7 +25,7 @@ public class Account {
     public void deposit(BigDecimal amount) {
         checkThatAmountIsGreaterThanZero(amount);
         balance = balance.add(amount);
-        operations.add(new Operation(LocalDateTime.now(), amount, WITHDRAW, balance));
+        operations.add(new Operation(LocalDateTime.now(), amount, DEPOSIT, balance));
     }
 
     public void withdraw(BigDecimal amount) {
