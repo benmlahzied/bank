@@ -8,8 +8,9 @@ import org.junit.jupiter.api.Test;
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public class AccountTest {
+class AccountTest {
 
     private Account account;
 
@@ -24,11 +25,12 @@ public class AccountTest {
     }
 
     @Test
-    @DisplayName("Deposit:1000|Deposit:10|Balance:1010")
+    @DisplayName("Deposit:1000|Deposit:10|withdraw:100|Balance:910")
     void shouldUpdateBalanceAfterDeposit() {
         account.deposit(BigDecimal.valueOf(1000));
         account.deposit(BigDecimal.TEN);
-        assertThat(account.getTotalBalance()).isNotNull().isEqualTo(BigDecimal.valueOf(1010));
+        account.withdraw(BigDecimal.valueOf(100));
+        assertThat(account.getTotalBalance()).isNotNull().isEqualTo(BigDecimal.valueOf(910));
     }
 
     @Test
@@ -42,4 +44,22 @@ public class AccountTest {
         Assertions.assertThrows(IllegalArgumentException.class, () -> account.deposit(BigDecimal.ZERO));
     }
 
+    @Test
+    void shouldRejectWithdrawalOfNegativeAmount() {
+        BigDecimal negativeAmount = BigDecimal.valueOf(-100);
+        assertThrows(IllegalArgumentException.class, () -> account.withdraw(negativeAmount));
+    }
+
+    @Test
+    void shouldRejectWithdrawalOfZeroAmount() {
+        assertThrows(IllegalArgumentException.class, () -> account.withdraw(BigDecimal.ZERO));
+    }
+
+    @Test
+    void shouldRejectWithdrawalInCaseOfInsufficientFunds() {
+        assertThrows(IllegalArgumentException.class, () -> account.withdraw(BigDecimal.ZERO));
+        account.deposit(BigDecimal.valueOf(1000));
+        BigDecimal amount = BigDecimal.valueOf(1200);
+        assertThrows(IllegalArgumentException.class, () -> account.withdraw(amount));
+    }
 }

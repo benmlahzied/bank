@@ -20,4 +20,8 @@ public class Account {
     public BigDecimal getTotalBalance() {
         return this.balance;
     }
+
+    public void withdraw(BigDecimal amount) {
+
+    }
 }
