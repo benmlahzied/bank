@@ -14,7 +14,6 @@ import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
@@ -78,7 +77,9 @@ class AccountTest {
 
     @Test
     void shouldCallStatementPrintingService() {
+        account.deposit(BigDecimal.valueOf(1000));
+        account.withdraw(BigDecimal.valueOf(100));
         account.printStatement();
-        verify(statementPrintingService, times(1)).print(any());
+        verify(statementPrintingService, times(1)).print(account.getOperations());
     }
 }

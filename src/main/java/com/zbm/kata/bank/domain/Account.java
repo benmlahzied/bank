@@ -41,6 +41,10 @@ public class Account {
         return this.balance;
     }
 
+    public List<Operation> getOperations() {
+        return operations;
+    }
+
     private void checkThatAmountIsGreaterThanZero(BigDecimal amount) {
         if (amount.signum() <= 0) {
             throw new IllegalArgumentException("Amount should be greater than zero.");
