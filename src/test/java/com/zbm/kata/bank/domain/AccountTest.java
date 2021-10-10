@@ -1,22 +1,35 @@
 package com.zbm.kata.bank.domain;
 
+import com.zbm.kata.bank.service.StatementPrintingService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
+@ExtendWith(MockitoExtension.class)
 class AccountTest {
 
+    @InjectMocks
     private Account account;
+
+    @Mock
+    private StatementPrintingService statementPrintingService;
 
     @BeforeEach
     void init() {
-        account = new Account();
+        account = new Account(statementPrintingService);
     }
 
     @Test
@@ -61,5 +74,11 @@ class AccountTest {
         account.deposit(BigDecimal.valueOf(1000));
         BigDecimal amount = BigDecimal.valueOf(1200);
         assertThrows(IllegalArgumentException.class, () -> account.withdraw(amount));
+    }
+
+    @Test
+    void shouldCallStatementPrintingService() {
+        account.printStatement();
+        verify(statementPrintingService, times(1)).print(any());
     }
 }

@@ -1,12 +1,14 @@
 package com.zbm.kata.bank.domain;
 
+import com.zbm.kata.bank.service.StatementPrintingService;
+
 import java.math.BigDecimal;
 
 public class Account {
 
     private BigDecimal balance;
 
-    public Account() {
+    public Account(StatementPrintingService statementPrintingService) {
         balance = BigDecimal.ZERO;
     }
 
@@ -31,5 +33,9 @@ public class Account {
         if (amount.signum() <= 0) {
             throw new IllegalArgumentException("Amount should be greater than zero.");
         }
+    }
+
+    public void printStatement() {
+
     }
 }
